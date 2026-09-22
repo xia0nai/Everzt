@@ -14,6 +14,7 @@ local WindUI
 local Const = {
     Config = {
         Author = "xia0nai",
+        Project = "Everzt",
         Folder = "xia0nai",
     },
     WindUI = {
@@ -42,7 +43,7 @@ end
 
 -- */  Window  /* --
 local Window = WindUI:CreateWindow({
-    Title = "TestRbx",
+    Title = Const.Config.Project,
     Author = "by " .. Const.Config.Author,
     Folder = Const.Config.Folder,
     Icon = "solar:atom-bold-duotone",
@@ -51,7 +52,7 @@ local Window = WindUI:CreateWindow({
     HideSearchBar = false,
     ScrollBarEnabled = true,
     OpenButton = {
-        Title = "TestRbx",
+        Title = Const.Config.Project,
         Icon = "solar:atom-bold-duotone",
         CornerRadius = UDim.new(1, 0),
         StrokeThickness = 2,
@@ -269,7 +270,7 @@ do
     })
 
     local InstantFishingToggle = InstantFishingSection:Toggle({
-        Title = "Toggle",
+        Title = "Enable Instant Fishing",
         Desc = "Auto-finish the fishing minigame instantly while active.",
         Type = "Checkbox",
         Value = false,
