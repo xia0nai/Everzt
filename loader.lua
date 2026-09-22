@@ -10,6 +10,25 @@ local cloneref = (cloneref or clonereference or function(instance)
 end)
 
 local player = Players.LocalPlayer
+
+local FishingModules = nil
+local PowerBarHandler_m = nil
+local MiniGameHandler_m = nil
+local FishingImageDatabase_m = nil
+local NotifTangkapan_m = nil
+local TierIkan_m = nil
+
+pcall(function()
+    local ModulesFolder = ReplicatedStorage:WaitForChild("Modules", 30)
+    FishingModules = ModulesFolder:WaitForChild("Fishing", 30)
+
+    PowerBarHandler_m = require(FishingModules:WaitForChild("PowerBarHandler", 30))
+    MiniGameHandler_m = require(FishingModules:WaitForChild("MiniGameHandler", 30))
+    FishingImageDatabase_m = require(FishingModules:WaitForChild("FishingImageDatabase", 30))
+    NotifTangkapan_m = require(FishingModules:WaitForChild("NotifTangkapan", 30))
+    TierIkan_m = require(FishingModules:WaitForChild("TierIkan", 30))
+end)
+
 local WindUI
 local Const = {
     Config = {
@@ -98,12 +117,11 @@ local InstantFishingState = {
     Enabled = false,
     Hooked = false,
     MiniGameHandler = nil,
-    OriginalStart = nil,
-    OriginalStop = nil,
     LastResolveAt = 0,
     CurrentRod = nil,
     CharacterConnection = nil,
-    BackpackConnection = nil
+    BackpackConnection = nil,
+    RodConnections = {}
 }
 
 local function getCurrentFishingRod()
@@ -127,13 +145,8 @@ local function getCurrentFishingRod()
     return nil
 end
 
-local function resolveInstantCatch()
-    if not InstantFishingState.Enabled then
-        return
-    end
-
-    local rod = getCurrentFishingRod()
-    if not rod then
+local function attachHookToRod(rod)
+    if not rod or InstantFishingState.RodConnections[rod] then
         return
     end
 
@@ -142,48 +155,70 @@ local function resolveInstantCatch()
         return
     end
 
-    local status = mechanics:FindFirstChild("Status")
-    if not status then
-        return
-    end
-
-    local fishingActive = status:FindFirstChild("FishingActive")
-    local miniGameActive = status:FindFirstChild("MiniGameActive")
-    if not fishingActive and not miniGameActive then
-        return
-    end
-
-    if fishingActive and fishingActive.Value ~= true and miniGameActive and miniGameActive.Value ~= true then
-        return
-    end
-
-    local now = os.clock()
-    if now - (InstantFishingState.LastResolveAt or 0) < 0.12 then
-        return
-    end
-
-    InstantFishingState.LastResolveAt = now
-    InstantFishingState.CurrentRod = rod
-
     local remotes = mechanics:FindFirstChild("Remotes")
     local miniGameRemote = remotes and remotes:FindFirstChild("MiniGame")
     if not miniGameRemote then
         return
     end
 
-    task.spawn(function()
-        if InstantFishingState.MiniGameHandler and InstantFishingState.MiniGameHandler.Stop then
-            pcall(function()
-                InstantFishingState.MiniGameHandler.Stop()
-            end)
+    local connection = miniGameRemote.OnClientEvent:Connect(function(eventName)
+        if not InstantFishingState.Enabled or eventName ~= "Start" then
+            return
         end
 
-        task.wait(0.04)
+        if os.clock() - (InstantFishingState.LastResolveAt or 0) < 0.15 then
+            return
+        end
 
-        pcall(function()
-            miniGameRemote:FireServer(true)
+        InstantFishingState.LastResolveAt = os.clock()
+        InstantFishingState.CurrentRod = rod
+
+        task.spawn(function()
+            if InstantFishingState.MiniGameHandler and InstantFishingState.MiniGameHandler.Stop then
+                pcall(function()
+                    InstantFishingState.MiniGameHandler.Stop()
+                end)
+            end
+
+            task.wait(0.04)
+
+            pcall(function()
+                miniGameRemote:FireServer(true)
+            end)
         end)
     end)
+
+    InstantFishingState.RodConnections[rod] = connection
+end
+
+local function refreshRodHooks()
+    local seen = {}
+
+    if player.Character then
+        for _, child in ipairs(player.Character:GetChildren()) do
+            if child:IsA("Tool") and child:FindFirstChild("Mechanics") then
+                seen[child] = true
+                attachHookToRod(child)
+            end
+        end
+    end
+
+    local backpack = player:FindFirstChildOfClass("Backpack")
+    if backpack then
+        for _, child in ipairs(backpack:GetChildren()) do
+            if child:IsA("Tool") and child:FindFirstChild("Mechanics") then
+                seen[child] = true
+                attachHookToRod(child)
+            end
+        end
+    end
+
+    for rod, connection in pairs(InstantFishingState.RodConnections) do
+        if not seen[rod] and connection then
+            connection:Disconnect()
+            InstantFishingState.RodConnections[rod] = nil
+        end
+    end
 end
 
 local function attachInstantFishingHooks()
@@ -208,43 +243,43 @@ local function attachInstantFishingHooks()
     end
 
     InstantFishingState.MiniGameHandler = MiniGameHandler
-    InstantFishingState.OriginalStart = MiniGameHandler.Start
-    InstantFishingState.OriginalStop = MiniGameHandler.Stop
+    refreshRodHooks()
 
-    MiniGameHandler.Start = function(difficulty, speed, fishData)
-        if not InstantFishingState.Enabled then
-            if InstantFishingState.OriginalStart then
-                return InstantFishingState.OriginalStart(difficulty, speed, fishData)
-            end
-            return
-        end
-
-        task.defer(function()
-            resolveInstantCatch()
+    if player.Character then
+        InstantFishingState.CharacterConnection = player.CharacterAdded:Connect(function()
+            task.defer(refreshRodHooks)
         end)
+    end
 
-        return
+    local backpack = player:FindFirstChildOfClass("Backpack")
+    if backpack then
+        InstantFishingState.BackpackConnection = backpack.ChildAdded:Connect(function()
+            task.defer(refreshRodHooks)
+        end)
     end
 
     InstantFishingState.Hooked = true
 end
 
 local function detachInstantFishingHooks()
-    if not InstantFishingState.Hooked or not InstantFishingState.MiniGameHandler then
-        return
+    for _, connection in pairs(InstantFishingState.RodConnections) do
+        if connection then
+            connection:Disconnect()
+        end
+    end
+    InstantFishingState.RodConnections = {}
+
+    if InstantFishingState.CharacterConnection then
+        InstantFishingState.CharacterConnection:Disconnect()
+        InstantFishingState.CharacterConnection = nil
     end
 
-    if InstantFishingState.OriginalStart then
-        InstantFishingState.MiniGameHandler.Start = InstantFishingState.OriginalStart
-    end
-
-    if InstantFishingState.OriginalStop then
-        InstantFishingState.MiniGameHandler.Stop = InstantFishingState.OriginalStop
+    if InstantFishingState.BackpackConnection then
+        InstantFishingState.BackpackConnection:Disconnect()
+        InstantFishingState.BackpackConnection = nil
     end
 
     InstantFishingState.MiniGameHandler = nil
-    InstantFishingState.OriginalStart = nil
-    InstantFishingState.OriginalStop = nil
     InstantFishingState.CurrentRod = nil
     InstantFishingState.Hooked = false
 end
