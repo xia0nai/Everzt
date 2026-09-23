@@ -58,9 +58,9 @@ end
 -- */  Window /* --
 local Window = WindUI:CreateWindow({
     Title = "Everzt",
-    Author = "by " .. Const.Config.Author,
+    -- Author = "by " .. Const.Config.Author,
     Folder = Const.Config.Folder,
-    Icon = Const.WindUI.Icon,
+    -- Icon = Const.WindUI.Icon,
     Theme = Const.WindUI.Theme,
     NewElements = true,
     HideSearchBar = false,
