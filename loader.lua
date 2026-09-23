@@ -15,7 +15,7 @@ local Const = {
     Config = {
         Author = "xia0nai",
         ProjectName = "Everzt",
-        Folder = "xia0nai",
+        Folder = "Everzt",
     },
     WindUI = {
         Theme = "Crimson"
