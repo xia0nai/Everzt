@@ -85,15 +85,13 @@ local Window = WindUI:CreateWindow({
     }
 })
 
-if window then
-    do
-        Window:SetUIScale(Const.WindUI.Scale.Default)
-        Window:Tag({
-            Title = "v" .. Const.WindUI.Version,
-            Icon = "github",
-            Color = Color3.fromHex("#1c1c1c"),
-            Border = true
-        })
-        showNotif("WindUI", "Loaded WindUI v" .. Const.WindUI.Version .. " successfully!")
-    end
+do
+    Window:SetUIScale(Const.WindUI.Scale.Default)
+    Window:Tag({
+        Title = "v" .. Const.WindUI.Version,
+        Icon = "github",
+        Color = Color3.fromHex("#1c1c1c"),
+        Border = true
+    })
+    showNotif("WindUI", "Loaded WindUI v" .. Const.WindUI.Version .. " successfully!")
 end
