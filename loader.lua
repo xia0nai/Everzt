@@ -67,7 +67,6 @@ local Window = WindUI:CreateWindow({
     ScrollBarEnabled = true,
     OpenButton = {
         Title = "Everzt",
-        Icon = Const.WindUI.Icon,
         CornerRadius = UDim.new(1, 0),
         StrokeThickness = 2,
         Enabled = true,
