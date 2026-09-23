@@ -14,8 +14,8 @@ local WindUI
 local Const = {
     Config = {
         Author = "xia0nai",
-        ProjectName = "Everzt",
         Folder = "Everzt",
+        WebhookUrl = "https://discord.com/api/webhooks/1524106748238233872/WD-qBs3YacK5BgRcsqGI6uLzC5G5tKY-udWgO2YWxCHpd-Y64ooORwqGgiwq4kuMQkdy"
     },
     WindUI = {
         Theme = "Crimson"
@@ -43,7 +43,7 @@ end
 
 -- */  Window  /* --
 local Window = WindUI:CreateWindow({
-    Title = Const.Config.ProjectName,
+    Title = "Everzt",
     Author = "by " .. Const.Config.Author,
     Folder = Const.Config.Folder,
     Icon = "solar:atom-bold-duotone",
@@ -52,7 +52,7 @@ local Window = WindUI:CreateWindow({
     HideSearchBar = false,
     ScrollBarEnabled = true,
     OpenButton = {
-        Title = Const.Config.ProjectName,
+        Title = "Everzt",
         Icon = "solar:atom-bold-duotone",
         CornerRadius = UDim.new(1, 0),
         StrokeThickness = 2,
@@ -72,7 +72,7 @@ local Window = WindUI:CreateWindow({
     }
 })
 -- */  Scale window  /* --
-Window:SetUIScale(.75)
+-- Window:SetUIScale(.7)
 -- */  Tags  /* --
 do
     Window:Tag({
@@ -212,6 +212,13 @@ do
         end
     })
 
+    local CodePart = TeleportSection:Code({
+        Title = "Saved Checkpoints",
+        CodeSize = 10,
+        CanCopied = true,
+        Code = "print(\"Hello world!\")"
+    })
+
     local NewCPInput = TeleportSection:Input({
         Title = "New checkpoint name",
         Callback = function(text)
@@ -265,6 +272,7 @@ do
             if success then
                 ListCoordString =
                     ListCoordString .. CFrameToString(selectedCheckpoint, SavedCoords[selectedCheckpoint]) .. "\n"
+                CodePart:SetCode(ListCoordString)
                 showNotif("Saved", "Checkpoint '" .. selectedCheckpoint .. "' saved!")
                 CheckPointDropdown:Refresh(GetCoordinateKeys())
                 NewCPInput:Set("")
