@@ -19,6 +19,7 @@ local Const = {
     },
     WindUI = {
         Theme = "Crimson",
+        Icon = "https://raw.githubusercontent.com/xia0nai/Everzt/refs/heads/master/ic_everzt_logo.svg",
         Version = "1.6.66",
         Scale = {
             Small = 0.7,
@@ -48,25 +49,25 @@ function showNotif(section, msg)
 end
 -- */ END Show Notification init /* --
 
--- */ Welcome notification  /* --
+-- */ Welcome notification /* --
 if player then
     showNotif("Welcome!", "Hello " .. player.Name .. "!")
 end
--- */ END Welcome notification  /* --
+-- */ END Welcome notification /* --
 
--- */  Window  /* --
+-- */  Window /* --
 local Window = WindUI:CreateWindow({
     Title = "Everzt",
     Author = "by " .. Const.Config.Author,
     Folder = Const.Config.Folder,
-    Icon = "solar:atom-bold-duotone",
+    Icon = Const.WindUI.Icon,
     Theme = Const.WindUI.Theme,
     NewElements = true,
     HideSearchBar = false,
     ScrollBarEnabled = true,
     OpenButton = {
         Title = "Everzt",
-        Icon = "solar:atom-bold-duotone",
+        Icon = Const.WindUI.Icon,
         CornerRadius = UDim.new(1, 0),
         StrokeThickness = 2,
         Enabled = true,
@@ -84,15 +85,16 @@ local Window = WindUI:CreateWindow({
         Enabled = true
     }
 })
+Window:SetUIScale(Const.WindUI.Scale.Default)
 
-Window:SetUIScale(Const.WindUI.Scale.Default) 
-
+-- */ Window Tag /* --
 do
     Window:Tag({
-        Title = "v" .. Const.WindUI.Version,
+        Title = "v" .. Const.Version,
         Icon = "github",
         Color = Color3.fromHex("#1c1c1c"),
         Border = true
     })
-    showNotif("WindUI", "Loaded WindUI v" .. Const.WindUI.Version .. " successfully!")
+    showNotif("WindUI", "Loaded WindUI v" .. Const.WindUI.Version)
 end
+-- */ END Window Tag /* --
