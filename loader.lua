@@ -60,7 +60,7 @@ local Window = WindUI:CreateWindow({
     Title = "Everzt",
     -- Author = "by " .. Const.Config.Author,
     Folder = Const.Config.Folder,
-    -- Icon = Const.WindUI.Icon,
+    Icon = Const.WindUI.Icon,
     Theme = Const.WindUI.Theme,
     NewElements = true,
     HideSearchBar = false,
@@ -89,7 +89,7 @@ Window:SetUIScale(Const.WindUI.Scale.Default)
 -- */ Window Tag /* --
 do
     Window:Tag({
-        Title = "v" .. Const.Version,
+        Title = "v" .. Const.Config.Version,
         Icon = "github",
         Color = Color3.fromHex("#1c1c1c"),
         Border = true
