@@ -15,10 +15,17 @@ local Const = {
     Config = {
         Author = "xia0nai",
         Folder = "Everzt",
+        Version = "0.0.1-alpha.1"
     },
     WindUI = {
         Theme = "Crimson",
         Version = "1.6.66",
+        Scale = {
+            Small = 0.65,
+            Default = 0.75,
+            Normal = 1,
+            Large = 1.1
+        }
     }
 }
 
@@ -39,6 +46,13 @@ function showNotif(section, msg)
         Icon = "lucide:info"
     })
 end
+-- */ END Show Notification init /* --
+
+-- */ Welcome notification  /* --
+if player then
+    showNotif("Welcome!", "Hello " .. player.Name .. "!")
+end
+-- */ END Welcome notification  /* --
 
 -- */  Window  /* --
 local Window = WindUI:CreateWindow({
@@ -70,14 +84,16 @@ local Window = WindUI:CreateWindow({
         Enabled = true
     }
 })
--- */  Scale window  /* --
--- Window:SetUIScale(.7)
--- */  Tags  /* --
-do
-    Window:Tag({
-        Title = "v0.0.1-alpha.1",
-        Icon = "github",
-        Color = Color3.fromHex("#1c1c1c"),
-        Border = true
-    })
+
+if window then
+    do
+        Window:SetUIScale(Const.WindUI.Scale.Default)
+        Window:Tag({
+            Title = "v" .. Const.WindUI.Version,
+            Icon = "github",
+            Color = Color3.fromHex("#1c1c1c"),
+            Border = true
+        })
+        showNotif("WindUI", "Loaded WindUI v" .. Const.WindUI.Version .. " successfully!")
+    end
 end
