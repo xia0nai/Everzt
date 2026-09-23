@@ -74,7 +74,7 @@ local Window = WindUI:CreateWindow({
         OnlyMobile = false,
         Scale = 0.8,
         Color = ColorSequence.new( -- gradient
-        Color3.fromHex("#30FF6A"), Color3.fromHex("#e7ff2f"))
+        Color3.fromHex("#831843"), Color3.fromHex("#4c0519"))
     },
     Topbar = {
         Height = 44,
@@ -91,7 +91,7 @@ do
     Window:Tag({
         Title = "v" .. Const.Config.Version,
         Icon = "github",
-        Color = Color3.fromHex("#1c1c1c"),
+        Color = Color3.fromHex("#4c0519"),
         Border = true
     })
     showNotif("WindUI", "Loaded WindUI v" .. Const.Config.Version .. "!")
