@@ -34,7 +34,7 @@ do
     if cloneref(game:GetService("RunService")):IsStudio() then
         WindUI = require(cloneref(ReplicatedStorage:WaitForChild("WindUI"):WaitForChild("Init")))
     else
-        WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/download/" .. Const.WindUI.Version .. "/main.lua"))()
+        WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/download/" .. Const.WindUI.Version .. "/main.lua"))() 
     end
 end
 
@@ -94,6 +94,6 @@ do
         Color = Color3.fromHex("#1c1c1c"),
         Border = true
     })
-    showNotif("WindUI", "Loaded WindUI v" .. Const.WindUI.Version)
+    showNotif("WindUI", "Loaded WindUI v" .. Const.Config.Version .. "!")
 end
 -- */ END Window Tag /* --
