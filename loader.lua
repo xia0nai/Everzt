@@ -1,12 +1,13 @@
+local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local VirtualUser = game:GetService("VirtualUser")
-local RunService = game:GetService("RunService")
 
 local cloneref = (cloneref or clonereference or function(instance)
     return instance
 end)
+local ReplicatedStorage = cloneref(game:GetService("ReplicatedStorage"))
+local HttpService = cloneref(game:GetService("HttpService"))
 
 local player = Players.LocalPlayer
 local WindUI
@@ -80,85 +81,3 @@ do
         Border = true
     })
 end
-
-local Tabs = {
-    MainTab = Window:Tab({
-        Title = "Main",
-        Icon = "lucide:house"
-    }),
-    TeleportTab = Window:Tab({
-        Title = "Teleport",
-        Icon = "lucide:map-pin"
-    }),
-    SettingsTab = Window:Tab({
-        Title = "Settings",
-        Icon = "lucide:settings"
-    })
-}
-
--- */ Settings Tab /* --
-do
-    local MiscSection = Tabs.SettingsTab:Section({
-        Title = "Miscellaneous",
-        Box = true,
-        Opened = true
-    })
-
-    -- */ Anti-AFK init /* --
-    local AntiAFK = {}
-    AntiAFK.Enabled = false
-    AntiAFK.IdleThreshold = 15 * 60
-    local lastInput = tick()
-    local heartbeatConn = nil
-    local inputConns = {}
-
-    local function resetTimer()
-        lastInput = tick()
-    end
-
-    function AntiAFK.Toggle(state)
-        AntiAFK.Enabled = state
-        if heartbeatConn then
-            heartbeatConn:Disconnect()
-            heartbeatConn = nil
-        end
-        for _, conn in ipairs(inputConns) do
-            conn:Disconnect()
-        end
-        inputConns = {}
-        if not state then
-            return
-        end
-        lastInput = tick()
-        table.insert(inputConns, UserInputService.InputBegan:Connect(resetTimer))
-        table.insert(inputConns, UserInputService.InputChanged:Connect(resetTimer))
-
-        task.spawn(function()
-            while AntiAFK.Enabled do
-                task.wait(50)
-                if AntiAFK.Enabled and tick() - lastInput >= AntiAFK.IdleThreshold then
-                    VirtualUser:CaptureController()
-                    VirtualUser:ClickButton2(Vector2.new())
-                    lastInput = tick()
-                end
-            end
-        end)
-    end
-
-    local AFKToggle = MiscSection:Toggle({
-        Title = "Anti-AFK",
-        Type = "Checkbox",
-        Value = true, -- default value
-        Flag = "Settings_Misc_AntiAFK",
-        Callback = function(state)
-            AntiAFK.Toggle(state)
-            if state then
-                showNotif("Settings changes", "Anti-AFK enabled")
-            else
-                showNotif("Settings changes", "Anti-AFK disabled")
-            end
-        end
-    })
-    -- */ END Anti-AFK init /* --
-end
--- */ END Settings Tab /* --
