@@ -91,7 +91,7 @@ do
     Window:Tag({
         Title = "v" .. Const.Config.Version,
         Icon = "github",
-        Color = Color3.fromHex("#4c0519"),
+        Color = Color3.fromHex("#0f172a"),
         Border = true
     })
     showNotif("WindUI", "Loaded WindUI v" .. Const.Config.Version .. "!")
