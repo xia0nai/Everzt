@@ -1,3 +1,21 @@
+local FishingModules = nil
+local PowerBarHandler_m = nil
+local MiniGameHandler_m = nil
+local FishingImageDatabase_m = nil
+local NotifTangkapan_m = nil
+local TierIkan_m = nil
+
+pcall(function()
+    local ModulesFolder = ReplicatedStorage:WaitForChild("Modules", 30)
+    FishingModules = ModulesFolder:WaitForChild("Fishing", 30)
+
+    PowerBarHandler_m = require(FishingModules:WaitForChild("PowerBarHandler", 30))
+    MiniGameHandler_m = require(FishingModules:WaitForChild("MiniGameHandler", 30))
+    FishingImageDatabase_m = require(FishingModules:WaitForChild("FishingImageDatabase", 30))
+    NotifTangkapan_m = require(FishingModules:WaitForChild("NotifTangkapan", 30))
+    TierIkan_m = require(FishingModules:WaitForChild("TierIkan", 30))
+end)
+
 local InstantFishingState = {
     Enabled = false,
     Hooked = false,
