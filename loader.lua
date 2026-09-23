@@ -85,8 +85,9 @@ local Window = WindUI:CreateWindow({
     }
 })
 
+Window:SetUIScale(Const.WindUI.Scale.Default) 
+
 do
-    Window:SetUIScale(Const.WindUI.Scale.Default)
     Window:Tag({
         Title = "v" .. Const.WindUI.Version,
         Icon = "github",
