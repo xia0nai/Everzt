@@ -21,8 +21,8 @@ local Const = {
         Theme = "Crimson",
         Version = "1.6.66",
         Scale = {
-            Small = 0.65,
-            Default = 0.75,
+            Small = 0.7,
+            Default = 0.8,
             Normal = 1,
             Large = 1.1
         }
