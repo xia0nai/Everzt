@@ -122,7 +122,7 @@ local Tabs = {
         Icon = "lucide:settings"
     })
 }
-AboutTab:Select()
+Tabs.AboutTab:Select()
 
 -- */ Main Tab /* --
 do
