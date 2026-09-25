@@ -151,29 +151,12 @@ do
                              "Spot 2;-8139.1079;1239.3344;-6196.1689;3.1416;-0.0022;-3.1416",
                              "Spot Core;-9050.6523;1250.8180;-6508.4370;-0.0000;0.1158;0.0000"}
     local ListSpotCore = {"Spot 1;-6891.1274;1327.9509;-9796.7715;-3.1416;-1.2807;-3.1416",
-                        "Spot 2;-8139.1079;1239.3344;-6196.1689;3.1416;-0.0022;-3.1416",
-                        "Spot Core;-9050.6523;1250.8180;-6508.4370;-0.0000;0.1158;0.0000"}
-    local ListCoordString = ""
-    local TeleportSection = Tabs.MainTab:Section({
-        Title = "Teleport To Checkpoint",
-        Box = false,
-        Opened = true
-    })
-    local TeleportSpotSection = Tabs.MainTab:Section({
-        Title = "Teleport to Spot Fishing",
-        Box = false,
-        Opened = false
-    })
-
+                          "Spot 2;-8139.1079;1239.3344;-6196.1689;3.1416;-0.0022;-3.1416",
+                          "Spot Core;-9050.6523;1250.8180;-6508.4370;-0.0000;0.1158;0.0000"}
     local SavedCoords = {}
+    local CoreCoords = {}
     local selectedCheckpoint = nil
-
-    local function CFrameToString(key, cf)
-        local x, y, z = cf.Position.X, cf.Position.Y, cf.Position.Z
-        local rx, ry, rz = cf:ToEulerAnglesXYZ()
-
-        return string.format("%s;%.4f;%.4f;%.4f;%.4f;%.4f;%.4f", key, x, y, z, rx, ry, rz)
-    end
+    local selectedCoreSpot = nil
 
     local function StringToCFrame(str)
         local parts = {}
@@ -191,27 +174,8 @@ do
         return key, cframe
     end
 
-    local function SaveCoordinate(key)
-        local character = player.Character
-        if not character then
-            return false
-        end
-
-        local rootPart = character:FindFirstChild("HumanoidRootPart")
-        if not rootPart then
-            return false
-        end
-
-        SavedCoords[key] = rootPart.CFrame
-        return true
-    end
-
-    local function GetCoordinate(key)
-        return SavedCoords[key]
-    end
-
-    local function TeleportTo(key)
-        local cframe = SavedCoords[key]
+    local function TeleportTo(lst, key)
+        local cframe = lst[key]
         if not cframe then
             return
         end
@@ -224,9 +188,9 @@ do
         end
     end
 
-    local function GetCoordinateKeys()
+    local function GetCoordinateKeys(lst)
         local keys = {}
-        for key, _ in pairs(SavedCoords) do
+        for key, _ in pairs(lst) do
             table.insert(keys, key)
         end
         table.sort(keys) -- opsional, biar urut alfabetis
@@ -238,10 +202,26 @@ do
         SavedCoords[key] = cframe
     end
 
+    for idx, value in ipairs(ListSpotCore) do
+        local key, cframe = StringToCFrame(value)
+        CoreCoords[key] = cframe
+    end
+
+    local TeleportSection = Tabs.MainTab:Section({
+        Title = "Teleport To Checkpoint",
+        Box = false,
+        Opened = true
+    })
+    local TeleportSpotSection = Tabs.MainTab:Section({
+        Title = "Teleport to Spot Fishing",
+        Box = false,
+        Opened = false
+    })
+
     -- */ Teleport Checkpoint /* --
     local CheckPointDropdown = TeleportSection:Dropdown({
         Title = "Checkpoint",
-        Values = GetCoordinateKeys(),
+        Values = GetCoordinateKeys(SavedCoords),
         Callback = function(selected)
             selectedCheckpoint = selected
         end
@@ -251,7 +231,7 @@ do
         Title = "Teleport",
         Callback = function()
             if selectedCheckpoint then
-                TeleportTo(selectedCheckpoint)
+                TeleportTo(SavedCoords, selectedCheckpoint)
             end
         end
     })
@@ -259,17 +239,17 @@ do
     -- */ Teleport Checkpoint /* --
     local SpotFishingDropdown = TeleportSpotSection:Dropdown({
         Title = "Spot Fishing",
-        Values = GetCoordinateKeys(),
+        Values = GetCoordinateKeys(CoreCoords),
         Callback = function(selected)
-            selectedCheckpoint = selected
+            selectedCoreSpot = selected
         end
     })
 
     local TPSpotButton = TeleportSpotSection:Button({
         Title = "Teleport",
         Callback = function()
-            if selectedCheckpoint then
-                TeleportTo(selectedCheckpoint)
+            if selectedCoreSpot then
+                TeleportTo(CoreCoords, selectedCoreSpot)
             end
         end
     })
