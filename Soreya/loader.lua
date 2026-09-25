@@ -150,11 +150,19 @@ do
                              "Spot 1;-6891.1274;1327.9509;-9796.7715;-3.1416;-1.2807;-3.1416",
                              "Spot 2;-8139.1079;1239.3344;-6196.1689;3.1416;-0.0022;-3.1416",
                              "Spot Core;-9050.6523;1250.8180;-6508.4370;-0.0000;0.1158;0.0000"}
+    local ListSpotCore = {"Spot 1;-6891.1274;1327.9509;-9796.7715;-3.1416;-1.2807;-3.1416",
+                        "Spot 2;-8139.1079;1239.3344;-6196.1689;3.1416;-0.0022;-3.1416",
+                        "Spot Core;-9050.6523;1250.8180;-6508.4370;-0.0000;0.1158;0.0000"}
     local ListCoordString = ""
     local TeleportSection = Tabs.MainTab:Section({
-        Title = "Teleport",
-        Box = true,
+        Title = "Teleport To Checkpoint",
+        Box = false,
         Opened = true
+    })
+    local TeleportSpotSection = Tabs.MainTab:Section({
+        Title = "Teleport to Spot Fishing",
+        Box = false,
+        Opened = false
     })
 
     local SavedCoords = {}
@@ -230,6 +238,7 @@ do
         SavedCoords[key] = cframe
     end
 
+    -- */ Teleport Checkpoint /* --
     local CheckPointDropdown = TeleportSection:Dropdown({
         Title = "Checkpoint",
         Values = GetCoordinateKeys(),
@@ -239,6 +248,24 @@ do
     })
 
     local TPButton = TeleportSection:Button({
+        Title = "Teleport",
+        Callback = function()
+            if selectedCheckpoint then
+                TeleportTo(selectedCheckpoint)
+            end
+        end
+    })
+
+    -- */ Teleport Checkpoint /* --
+    local SpotFishingDropdown = TeleportSpotSection:Dropdown({
+        Title = "Spot Fishing",
+        Values = GetCoordinateKeys(),
+        Callback = function(selected)
+            selectedCheckpoint = selected
+        end
+    })
+
+    local TPSpotButton = TeleportSpotSection:Button({
         Title = "Teleport",
         Callback = function()
             if selectedCheckpoint then
