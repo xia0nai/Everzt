@@ -15,7 +15,6 @@ local Const = {
     Config = {
         HubName = "Everzt",
         Author = "xia0nai",
-        Folder = "Everzt",
         Version = "0.0.1-alpha.1",
         MapName = "Mount Soreya"
     },
@@ -61,7 +60,7 @@ end
 local Window = WindUI:CreateWindow({
     Title = Const.Config.HubName,
     -- Author = "by " .. Const.Config.Author,
-    Folder = Const.Config.Folder,
+    Folder = Const.Config.HubName,
     Icon = "sfsymbols:mountain2Circle",
     Theme = Const.WindUI.Theme,
     NewElements = true,
@@ -154,101 +153,101 @@ do
     local selectedCheckpoint = nil
     local selectedCoreSpot = nil
 
-    local function StringToCFrame(str)
-        local parts = {}
-        for value in str:gmatch("[^;]+") do
-            table.insert(parts, value)
-        end
+    -- local function StringToCFrame(str)
+    --     local parts = {}
+    --     for value in str:gmatch("[^;]+") do
+    --         table.insert(parts, value)
+    --     end
 
-        local key = parts[1]
-        local x, y, z, rx, ry, rz = tonumber(parts[2]), tonumber(parts[3]), tonumber(parts[4]), tonumber(parts[5]),
-            tonumber(parts[6]), tonumber(parts[7])
-        local pos = Vector3.new(x, y, z)
-        local rot = Vector3.new(rx, ry, rz)
+    --     local key = parts[1]
+    --     local x, y, z, rx, ry, rz = tonumber(parts[2]), tonumber(parts[3]), tonumber(parts[4]), tonumber(parts[5]),
+    --         tonumber(parts[6]), tonumber(parts[7])
+    --     local pos = Vector3.new(x, y, z)
+    --     local rot = Vector3.new(rx, ry, rz)
 
-        cframe = CFrame.new(pos) * CFrame.fromEulerAnglesXYZ(math.rad(rot.X), math.rad(rot.Y), math.rad(rot.Z))
-        return key, cframe
-    end
+    --     cframe = CFrame.new(pos) * CFrame.fromEulerAnglesXYZ(math.rad(rot.X), math.rad(rot.Y), math.rad(rot.Z))
+    --     return key, cframe
+    -- end
 
-    local function TeleportTo(lst, key)
-        local cframe = lst[key]
-        if not cframe then
-            return
-        end
+    -- local function TeleportTo(lst, key)
+    --     local cframe = lst[key]
+    --     if not cframe then
+    --         return
+    --     end
 
-        local character = player.Character
-        local rootPart = character and character:FindFirstChild("HumanoidRootPart")
-        if rootPart then
-            rootPart.CFrame = cframe
-            showNotif("Teleported", "Teleported to '" .. key .. "'")
-        end
-    end
+    --     local character = player.Character
+    --     local rootPart = character and character:FindFirstChild("HumanoidRootPart")
+    --     if rootPart then
+    --         rootPart.CFrame = cframe
+    --         showNotif("Teleported", "Teleported to '" .. key .. "'")
+    --     end
+    -- end
 
-    local function GetCoordinateKeys(lst)
-        local keys = {}
-        for key, _ in pairs(lst) do
-            table.insert(keys, key)
-        end
-        table.sort(keys) -- opsional, biar urut alfabetis
-        return keys
-    end
+    -- local function GetCoordinateKeys(lst)
+    --     local keys = {}
+    --     for key, _ in pairs(lst) do
+    --         table.insert(keys, key)
+    --     end
+    --     table.sort(keys) -- opsional, biar urut alfabetis
+    --     return keys
+    -- end
 
-    for idx, value in ipairs(ListCheckpoints) do
-        local key, cframe = StringToCFrame(value)
-        SavedCoords[key] = cframe
-    end
+    -- for idx, value in ipairs(ListCheckpoints) do
+    --     local key, cframe = StringToCFrame(value)
+    --     SavedCoords[key] = cframe
+    -- end
 
-    for idx, value in ipairs(ListSpotCore) do
-        local key, cframe = StringToCFrame(value)
-        CoreCoords[key] = cframe
-    end
+    -- for idx, value in ipairs(ListSpotCore) do
+    --     local key, cframe = StringToCFrame(value)
+    --     CoreCoords[key] = cframe
+    -- end
 
-    local TeleportSection = Tabs.MainTab:Section({
-        Title = "Teleport To Checkpoint",
-        Box = false,
-        Opened = true
-    })
-    local TeleportSpotSection = Tabs.MainTab:Section({
-        Title = "Teleport to Spot Fishing",
-        Box = false,
-        Opened = false
-    })
+    -- local TeleportSection = Tabs.MainTab:Section({
+    --     Title = "Teleport To Checkpoint",
+    --     Box = false,
+    --     Opened = true
+    -- })
+    -- local TeleportSpotSection = Tabs.MainTab:Section({
+    --     Title = "Teleport to Spot Fishing",
+    --     Box = false,
+    --     Opened = false
+    -- })
 
-    -- */ Teleport Checkpoint /* --
-    local CheckPointDropdown = TeleportSection:Dropdown({
-        Title = "Checkpoint",
-        Values = GetCoordinateKeys(SavedCoords),
-        Callback = function(selected)
-            selectedCheckpoint = selected
-        end
-    })
+    -- -- */ Teleport Checkpoint /* --
+    -- local CheckPointDropdown = TeleportSection:Dropdown({
+    --     Title = "Checkpoint",
+    --     Values = GetCoordinateKeys(SavedCoords),
+    --     Callback = function(selected)
+    --         selectedCheckpoint = selected
+    --     end
+    -- })
 
-    local TPButton = TeleportSection:Button({
-        Title = "Teleport",
-        Callback = function()
-            if selectedCheckpoint then
-                TeleportTo(SavedCoords, selectedCheckpoint)
-            end
-        end
-    })
+    -- local TPButton = TeleportSection:Button({
+    --     Title = "Teleport",
+    --     Callback = function()
+    --         if selectedCheckpoint then
+    --             TeleportTo(SavedCoords, selectedCheckpoint)
+    --         end
+    --     end
+    -- })
 
-    -- */ Teleport Checkpoint /* --
-    local SpotFishingDropdown = TeleportSpotSection:Dropdown({
-        Title = "Spot Fishing",
-        Values = GetCoordinateKeys(CoreCoords),
-        Callback = function(selected)
-            selectedCoreSpot = selected
-        end
-    })
+    -- -- */ Teleport Checkpoint /* --
+    -- local SpotFishingDropdown = TeleportSpotSection:Dropdown({
+    --     Title = "Spot Fishing",
+    --     Values = GetCoordinateKeys(CoreCoords),
+    --     Callback = function(selected)
+    --         selectedCoreSpot = selected
+    --     end
+    -- })
 
-    local TPSpotButton = TeleportSpotSection:Button({
-        Title = "Teleport",
-        Callback = function()
-            if selectedCoreSpot then
-                TeleportTo(CoreCoords, selectedCoreSpot)
-            end
-        end
-    })
+    -- local TPSpotButton = TeleportSpotSection:Button({
+    --     Title = "Teleport",
+    --     Callback = function()
+    --         if selectedCoreSpot then
+    --             TeleportTo(CoreCoords, selectedCoreSpot)
+    --         end
+    --     end
+    -- })
 end
 -- */ END Teleport Tab /* --
 
