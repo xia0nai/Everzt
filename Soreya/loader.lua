@@ -36,8 +36,7 @@ do
     if cloneref(game:GetService("RunService")):IsStudio() then
         WindUI = require(cloneref(ReplicatedStorage:WaitForChild("WindUI"):WaitForChild("Init")))
     else
-        WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/download/" ..
-                                             Const.WindUI.Version .. "/main.lua"))()
+        WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/download/" .. Const.WindUI.Version .. "/main.lua"))()
     end
 end
 
@@ -260,7 +259,6 @@ do
         Box = true,
         Opened = true
     })
-
     -- */ Anti-AFK init /* --
     local AntiAFK = {}
     AntiAFK.Enabled = false
@@ -268,11 +266,9 @@ do
     local lastInput = tick()
     local heartbeatConn = nil
     local inputConns = {}
-
     local function resetTimer()
         lastInput = tick()
     end
-
     function AntiAFK.Toggle(state)
         AntiAFK.Enabled = state
         if heartbeatConn then
@@ -301,7 +297,6 @@ do
             end
         end)
     end
-
     local AFKToggle = MiscSection:Toggle({
         Title = "Anti-AFK",
         Type = "Checkbox",
