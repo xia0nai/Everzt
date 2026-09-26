@@ -13,7 +13,6 @@ local player = Players.LocalPlayer
 local WindUI
 local Const = {
     Config = {
-        HubName = "Everzt",
         Author = "xia0nai",
         Folder = "xia0nai",
         WebhookUrl = "https://discord.com/api/webhooks/1524106748238233872/WD-qBs3YacK5BgRcsqGI6uLzC5G5tKY-udWgO2YWxCHpd-Y64ooORwqGgiwq4kuMQkdy"
@@ -44,7 +43,7 @@ end
 
 -- */  Window  /* --
 local Window = WindUI:CreateWindow({
-    Title = Const.Config.HubName,
+    Title = "TestRbx",
     Author = "by " .. Const.Config.Author,
     Folder = Const.Config.Folder,
     Icon = "solar:atom-bold-duotone",
@@ -53,7 +52,7 @@ local Window = WindUI:CreateWindow({
     HideSearchBar = false,
     ScrollBarEnabled = true,
     OpenButton = {
-        Title = Const.Config.HubName,
+        Title = "TestRbx",
         Icon = "solar:atom-bold-duotone",
         CornerRadius = UDim.new(1, 0),
         StrokeThickness = 2,
